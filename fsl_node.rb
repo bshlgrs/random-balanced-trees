@@ -86,13 +86,6 @@ class FSLNode
 
   def bubble_up
     while $RANDOM.rand < 0.5
-      # if value == 6
-      #   puts "\n\n"
-
-      #   puts "parent value: #{@parent.value}"
-      #   root.print
-      # end
-
       position = @parent.children.find_index(self)
       parent.children.drop(position + 1).each { |node| add_child(node) }
 
@@ -106,12 +99,9 @@ class FSLNode
         end
 
         @parent.add_child(self)
-        # puts "done" if value == 6
         return
       else
-        # puts "right now parent is #{@parent.value} and grandparent is #{@parent.parent.value}}"
         @parent = @parent.parent
-        # puts "but now it's #{@parent.value}"
         @parent.add_child(self)
       end
     end
