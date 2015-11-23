@@ -20,7 +20,7 @@ The search algorithm is pretty simple. It could be written like this:
 class FSLNode
   # ...
 
-  def find_predecessor(target_value)
+  def find(target_value)
     return self if @value == target_value
     return nil if !is_root? && @value > target_value
 
