@@ -1,10 +1,15 @@
-$RANDOM = Random.new
+$RANDOM = Random.new(3)
 
 class FSLNode
   attr_accessor :value, :parent, :children, :properties
 
   def self.root
     FSLNode.new(nil)
+  end
+
+  def print(indentation = 0)
+    puts "  " * indentation + self.value.inspect
+    children.each { |child| child.print(indentation + 1) }
   end
 
   def initialize(value = nil, **properties)
@@ -18,6 +23,10 @@ class FSLNode
 
   def is_root?
     parent.nil?
+  end
+
+  def root
+    parent ? parent.root : self
   end
 
   def each(&blk)
@@ -35,7 +44,7 @@ class FSLNode
   end
 
   def find_predecessor(target_value)
-    return self if @value == target_value # this line is technically unnecessary
+    return self if @value == target_value # this line is unnecessary
     return nil if !is_root? && @value > target_value
 
     @children.reverse_each do |child|
@@ -77,23 +86,32 @@ class FSLNode
 
   def bubble_up
     while $RANDOM.rand < 0.5
-      position = parent.children.find_index(self)
-      @children.push(* parent.children.drop(position + 1))
+      # if value == 6
+      #   puts "\n\n"
+
+      #   puts "parent value: #{@parent.value}"
+      #   root.print
+      # end
+
+      position = @parent.children.find_index(self)
+      parent.children.drop(position + 1).each { |node| add_child(node) }
+
       @parent.children.pop(parent.children.length - position)
 
       if @parent.is_root?
-        if @parent.children.length > 0
+        if @parent.children.length > 1
           nodes = parent.children.drop(1)
           @parent.children = [parent.children.first]
           nodes.each { |node| parent.children.first.add_child(node) }
-        else
-          @parent.children = []
         end
 
         @parent.add_child(self)
+        # puts "done" if value == 6
         return
       else
-        @parent = parent.parent
+        # puts "right now parent is #{@parent.value} and grandparent is #{@parent.parent.value}}"
+        @parent = @parent.parent
+        # puts "but now it's #{@parent.value}"
         @parent.add_child(self)
       end
     end
