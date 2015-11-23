@@ -1,7 +1,9 @@
 $RANDOM = Random.new(3)
 
 class FSLNode
-  attr_accessor :value, :parent, :properties
+  include Comparable
+
+  attr_accessor :value, :parent
 
   def self.root
     FSLNode.new(nil)
@@ -16,13 +18,10 @@ class FSLNode
     @children.to_a
   end
 
-  def initialize(value = nil, **properties)
+  def initialize(value = nil)
     @value = value
     @parent = nil
     @children = []
-    @properties = properties || {}
-
-    @ordering = @properties[:ordering]
   end
 
   def is_root?
@@ -40,15 +39,18 @@ class FSLNode
   end
 
   def <=>(other)
-    self.value <=> other.value
+    if other.is_a? FSLNode
+      self.value <=> other.value
+    else
+      self.value <=> other    
+    end
   end
 
   def find_predecessor(target_value)
-    return self if @value == target_value # this line is unnecessary
-    return nil if !is_root? && @value > target_value
+    return nil if !is_root? && self > target_value
 
     @children.reverse_each do |child|
-      if child.value <= target_value
+      if child <= target_value
         result = child.find_predecessor(target_value)
         return result.nil? ? self : result
       end
@@ -60,7 +62,7 @@ class FSLNode
   def find(target_value)
     predecessor = find_predecessor(target_value)
 
-    return predecessor if predecessor.value == target_value
+    return predecessor if predecessor == target_value
     nil
   end
 
