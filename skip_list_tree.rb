@@ -99,33 +99,3 @@ class FSLNode
     end
   end
 end
-
-tree = FSLNode.root
-
-puts "inserting with tree"
-
-(1..10000).each do |x|
-  tree.insert(x)
-end
-
-puts "searching with tree"
-
-(1..10000).each do |x|
-  tree.find(x)
-  tree.find(x + 0.5)
-end
-
-puts "inserting with array"
-
-arr = []
-
-(1..10000).each do |x|
-  arr << x
-end
-
-puts "searching with array"
-
-(1..10000).each do |x|
-  arr.find_index(x)
-  arr.find_index(x + 0.5)
-end
