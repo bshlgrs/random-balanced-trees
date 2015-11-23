@@ -1,7 +1,7 @@
 $RANDOM = Random.new(3)
 
 class FSLNode
-  attr_accessor :value, :parent, :children, :properties
+  attr_accessor :value, :parent, :properties
 
   def self.root
     FSLNode.new(nil)
@@ -10,6 +10,10 @@ class FSLNode
   def print(indentation = 0)
     puts "  " * indentation + self.value.inspect
     children.each { |child| child.print(indentation + 1) }
+  end
+
+  def children
+    @children.to_a
   end
 
   def initialize(value = nil, **properties)
@@ -23,10 +27,6 @@ class FSLNode
 
   def is_root?
     parent.nil?
-  end
-
-  def root
-    parent ? parent.root : self
   end
 
   def each(&blk)
@@ -84,6 +84,11 @@ class FSLNode
     node.bubble_up
   end
 
+  def orphan_all_children!
+    @children.each { |x| x.parent = nil }
+    @children = []
+  end
+
   def bubble_up
     while $RANDOM.rand < 0.5
       position = @parent.children.find_index(self)
@@ -94,8 +99,10 @@ class FSLNode
       if @parent.is_root?
         if @parent.children.length > 1
           nodes = parent.children.drop(1)
-          @parent.children = [parent.children.first]
-          nodes.each { |node| parent.children.first.add_child(node) }
+          first = parent.children.first
+          parent.orphan_all_children!
+          parent.add_child(first)
+          nodes.each { |node| first.add_child(node) }
         end
 
         @parent.add_child(self)

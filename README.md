@@ -1,6 +1,6 @@
-# skip-list-tree
+# random balanced trees
 
-This code implements a class `FSLNode`, which stands for Forest Skip List Node. `FSLNode` is an implementation of a set: it supports `insert` and `find` in `O(log n)` average case time. I plan to extend it to implement a dictionary.
+This code implements a class `FSLNode`. `FSLNode` is an implementation of a set: it supports `insert` and `find` in `O(log n)` average case time. I plan to extend it to implement a dictionary.
 
 `FSLNode` is a rose tree with the following restrictions:
 
@@ -39,8 +39,4 @@ So, line by line: if you are the target value, return yourself. If you aren't th
 
 The insert method starts out pretty similarly: once you find the right place to insert yourself, insert yourself there. But then the algorithm does something tricky: it moves the inserted node up the tree.
 
-....
-
-## Background
-
-This data structure is basically equivalent to a skip list, but I think that it's more naturally expressed as a tree than as a 2D linked list, so I implemented it this way instead.
+more to come

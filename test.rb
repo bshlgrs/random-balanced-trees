@@ -1,6 +1,6 @@
 $RANDOM = Random.new(3)
 
-require "./skip_list_tree.rb"
+require "./fsl_node.rb"
 
 def time(description)
   puts description
