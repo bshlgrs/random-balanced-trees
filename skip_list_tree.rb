@@ -7,30 +7,28 @@ class FSLNode
     FSLNode.new(nil)
   end
 
+  def initialize(value = nil)
+    @value = value
+    @parent = nil
+    @children = []
+  end
+
   def is_root?
     parent.nil?
   end
 
-  def to_a
-    if is_root?
-      children.flat_map(&:to_a)
-    else
-      [value] + children.flat_map(&:to_a)
-    end
+  def each(&blk)
+    yield value unless is_root?
+
+    children.each { |child| child.each(&blk) }
   end
 
-  def inspect
-    "N(#{value.inspect}, #{children.map(&:inspect).join(",")})"
+  def to_a
+    [].tap { |out| self.each { |x| out << x } }
   end
 
   def <=>(other)
     self.value <=> other.value
-  end
-
-  def initialize(value)
-    @value = value
-    @parent = nil
-    @children = []
   end
 
   def find_predecessor(target_value)
@@ -57,6 +55,8 @@ class FSLNode
   def insert(target_value)
     predecessor = find_predecessor(target_value)
     predecessor.add_node_on_right(FSLNode.new(target_value))
+
+    self
   end
 
   def add_child(node)
@@ -74,12 +74,9 @@ class FSLNode
 
   def bubble_up
     while $RANDOM.rand < 0.5
-      # puts "bubble up: #{self.inspect} in #{self.parent.inspect}"
       position = parent.children.find_index(self)
       @children.push(* parent.children.drop(position + 1))
       @parent.children.pop(parent.children.length - position)
-
-      # puts "shaved parent: #{parent.inspect} #{parent.is_root?}"
 
       if @parent.is_root?
         if @parent.children.length > 0
