@@ -1,16 +1,19 @@
-$RANDOM = Random.new()
+$RANDOM = Random.new
 
 class FSLNode
-  attr_accessor :value, :parent, :children
+  attr_accessor :value, :parent, :children, :properties
 
   def self.root
     FSLNode.new(nil)
   end
 
-  def initialize(value = nil)
+  def initialize(value = nil, **properties)
     @value = value
     @parent = nil
     @children = []
+    @properties = properties || {}
+
+    @ordering = @properties[:ordering]
   end
 
   def is_root?
