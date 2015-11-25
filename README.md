@@ -37,6 +37,6 @@ end
 
 So, line by line: if you are the target value, return yourself. If you aren't the root and your value is greater than what you're looking for, then the target is not going to be found (because all your descendants have greater values than you), so return nil. Now, look backwards through your children until you find one whose value is smaller than your target. Recursively search that child for the target.
 
-The insert method starts out pretty similarly: once you find the right place to insert yourself, insert yourself there. But then the algorithm does something tricky: it moves the inserted node up the tree a random number of times, moving up 1 node with 50% probability, 2 nodes with 25% probability, 3 nodes with 12.5% probability, and so on, with the caveat that it never moves above the root `nil` element. This random motion leads the tree to be roughly "balanced", so that you get the nice `O(log n)` insertion and retrieval.
+The insert method starts out pretty similarly: once you find the right place to insert yourself, insert yourself there. But then the algorithm does something tricky: it moves the inserted node up the tree a random number of times, moving up 1 node with 50% probability, 2 nodes with 25% probability, 3 nodes with 12.5% probability, and so on, with the caveat that it never moves above the root `nil` element. This random motion leads the tree to be roughly "balanced"[CITATION NEEDED], so that you get the nice `O(log n)` insertion and retrieval.
 
 more to come
