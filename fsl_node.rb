@@ -1,4 +1,4 @@
-$RANDOM = Random.new(3)
+$RANDOM = Random.new
 
 class FSLNode
   include Comparable
@@ -25,19 +25,39 @@ class FSLNode
     parent.nil?
   end
 
-  def find_by_index(index)
+  def length
+    size
+  end
+
+  def first
+    self[0]
+  end
+
+  def last
+    self[size - 1]
+  end
+
+  def median
+    self[self.length / 2]
+  end
+
+  def [](index)
+    index += 1 if self.value.nil?
+    
     if index == 0
-      self
-    elsif index >= size
+      self.value
+    elsif index > size
       nil
     else
-      
+      index = index - 1
       @children.each do |child|
-        if child.size 
-          result = child.find_predecessor(target_value)
-          return result.nil? ? self : result
+        if child.size > index
+          return child[index]
         end
-      end 
+        index -= child.size
+      end
+
+      fail
     end
   end
 
@@ -79,7 +99,7 @@ class FSLNode
     nil
   end
 
-  def insert(target_value)
+  def add(target_value)
     predecessor = find_predecessor(target_value)
     predecessor.add_node_on_right(FSLNode.new(target_value))
 

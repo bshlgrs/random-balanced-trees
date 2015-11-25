@@ -14,7 +14,7 @@ size = 10000
 
 time("inserting with tree") do 
   (1..size).to_a.shuffle.each do |x|
-    tree.insert(x)
+    tree.add(x)
   end
 end
 

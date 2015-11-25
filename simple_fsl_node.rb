@@ -62,7 +62,7 @@ class SimpleFSLNode
     nil
   end
 
-  def insert(target_value)
+  def add(target_value)
     predecessor = find_predecessor(target_value)
     predecessor.add_node_on_right(SimpleFSLNode.new(target_value))
 
