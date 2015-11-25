@@ -1,16 +1,16 @@
 $RANDOM = Random.new(3)
 
-class FSLNode
+class SimpleFSLNode
   include Comparable
 
-  attr_accessor :value, :parent, :children, :size
+  attr_accessor :value, :parent, :children
 
   def self.root
-    FSLNode.new(nil)
+    SimpleFSLNode.new(nil)
   end
 
   def print(indentation = 0)
-    puts "  " * indentation + self.value.inspect + " (size #{size})"
+    puts "  " * indentation + self.value.inspect
     children.each { |child| child.print(indentation + 1) }
   end
 
@@ -18,27 +18,10 @@ class FSLNode
     @value = value
     @parent = nil
     @children = []
-    @size = value.nil? ? 0 : 1
   end
 
   def is_root?
     parent.nil?
-  end
-
-  def find_by_index(index)
-    if index == 0
-      self
-    elsif index >= size
-      nil
-    else
-      
-      @children.each do |child|
-        if child.size 
-          result = child.find_predecessor(target_value)
-          return result.nil? ? self : result
-        end
-      end 
-    end
   end
 
   def each(&blk)
@@ -52,7 +35,7 @@ class FSLNode
   end
 
   def <=>(other)
-    if other.is_a? FSLNode
+    if other.is_a? SimpleFSLNode
       self.value <=> other.value
     else
       self.value <=> other    
@@ -81,7 +64,7 @@ class FSLNode
 
   def insert(target_value)
     predecessor = find_predecessor(target_value)
-    predecessor.add_node_on_right(FSLNode.new(target_value))
+    predecessor.add_node_on_right(SimpleFSLNode.new(target_value))
 
     self
   end
@@ -89,8 +72,6 @@ class FSLNode
   def add_child(node)
     @children << node
     @children.sort!
-
-    recompute_monoids!
 
     node.parent = self
   end
@@ -104,13 +85,6 @@ class FSLNode
   def orphan_all_children!
     @children.each { |x| x.parent = nil }
     @children = []
-    recompute_monoids!
-  end
-
-  def recompute_monoids!
-    @size = @children.map(&:size).reduce(0, &:+) + (@value ? 1 : 0)
-
-    parent.recompute_monoids! if parent
   end
 
   def bubble_up
@@ -119,7 +93,6 @@ class FSLNode
       parent.children.drop(position + 1).each { |node| add_child(node) }
 
       @parent.children.pop(parent.children.length - position)
-      @parent.recompute_monoids!
 
       if @parent.is_root?
         if @parent.children.length > 1

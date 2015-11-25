@@ -1,6 +1,6 @@
 $RANDOM = Random.new(3)
 
-require "./fsl_node.rb"
+require "./simple_fsl_tree.rb"
 
 def time(description)
   puts description
@@ -9,7 +9,7 @@ def time(description)
   puts "That took #{Time.now - start_time}"
 end
 
-tree = FSLNode.root
+tree = SimpleFSLNode.root
 size = 10000
 
 time("inserting with tree") do 
@@ -17,8 +17,6 @@ time("inserting with tree") do
     tree.insert(x)
   end
 end
-
-puts "size is allegedly #{tree.size}"
 
 time("searching with tree") do
   (1..size).to_a.shuffle.each do |x|
